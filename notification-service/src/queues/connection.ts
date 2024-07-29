@@ -4,7 +4,7 @@ import { Logger } from 'winston';
 import { winstonLogger } from '@notifications/common-helpers/winston-logger';
 import { config } from '@notifications/config';
 
-const log: Logger = winstonLogger(`${config.ELASTIC_SEARCH_URL}`, 'notificationQueueConnection', 'debug');
+const log: Logger = winstonLogger(`${config.ELASTIC_SEARCH_URL}`, 'notification queue connection', 'debug');
 
 async function createConnection(): Promise<Channel | undefined> {
     try {
@@ -14,7 +14,7 @@ async function createConnection(): Promise<Channel | undefined> {
         closeConnection(channel, connection);
         return channel;
     } catch (error) {
-        log.log('error', 'NotificationService createConnection() method', error);
+        log.log('error', 'Notification Service error createConnection() method', error);
         return undefined;
     }
 }
