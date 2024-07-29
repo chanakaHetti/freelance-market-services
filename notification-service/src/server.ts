@@ -10,6 +10,8 @@ import { config } from '@notifications/config';
 import { healthRoutes } from '@notifications/routes';
 import { checkConnection } from '@notifications/elasticserach';
 import { createConnection } from '@notifications/queues/connection';
+import { consumeAuthEmailMessages } from '@notifications/queues/email.consumer';
+import { Channel } from 'amqplib';
 
 const SERVER_PORT = 4001;
 
@@ -25,7 +27,11 @@ export function start(app: Application): void {
 }
 
 async function startQueues(): Promise<void> {
-    createConnection();
+    const emailChannel = await createConnection();
+    await consumeAuthEmailMessages(emailChannel as Channel);
+    await emailChannel?.assertExchange('freelance-market-email-notification', 'direct');
+    const message = JSON.stringify({ name: 'freelance-market', service: 'notification service' });
+    emailChannel?.publish('freelance-market-email-notification', 'auth-email', Buffer.from(message));
 }
 
 function startElasticSearch(): void {

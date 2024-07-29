@@ -13,7 +13,7 @@ async function consumeAuthEmailMessages(channel: Channel): Promise<void> {
             channel = (await createConnection()) as Channel;
         }
 
-        const exchangeName = 'jobber-email-notification';
+        const exchangeName = 'freelance-market-email-notification';
         const routingKey = 'auth-email';
         const queueName = 'auth-email-queue';
 
@@ -24,6 +24,7 @@ async function consumeAuthEmailMessages(channel: Channel): Promise<void> {
             console.log(JSON.parse(msg!.content.toString()));
             // send emails
             // acknowledge
+            channel.ack(msg!);
         });
     } catch (error) {
         log.log('error', 'Notification Service - Email Consumer consumeAuthEmailMessages() method error', error);
